@@ -3,6 +3,8 @@
 import logging
 import argparse
 import re
+import requests
+
 
 def ip_address_type(arg_value, pat=re.compile(r"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")):
 	if not pat.match(arg_value):
@@ -23,3 +25,19 @@ password = args.password
 domain = args.domain
 ipAddress = args.ip
 
+
+# Logger
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('IP change cPanel')
+logger.setLevel(logging.DEBUG)
+
+# Console logger
+consoleHandler = logging.StreamHandler()
+consoleHandler.setLevel(logging.DEBUG)
+consoleHandler.setFormatter(formatter)
+
+logger.addHandler(consoleHandler)
+
+
+loginData = {"user": user, "pass": password}
+print(requests.post("https://cpanel.antyzero.com/login/?login_only=1", loginData).text)
