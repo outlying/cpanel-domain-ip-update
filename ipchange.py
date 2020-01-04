@@ -39,5 +39,37 @@ consoleHandler.setFormatter(formatter)
 logger.addHandler(consoleHandler)
 
 
+session = requests.Session()
+session.headers['User-Agent'] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
+
+# Login
 loginData = {"user": user, "pass": password}
-print(requests.post("https://cpanel.antyzero.com/login/?login_only=1", loginData).text)
+print(session.post("https://cpanel.antyzero.com/login/?login_only=1", loginData).text)
+
+# Update domain data
+changeIpData = {
+	"cpanel_jsonapi_apiversion": 2,
+	"cpanel_jsonapi_module": "ZoneEdit",
+	"cpanel_jsonapi_func": "edit_zone_record",
+	"domain": "antyzero.com",
+	"name": "home.antyzero.com.",
+	"type": "A",
+	"class": "IN",
+	"ttl": 30,
+	"line": 33,
+	"address": "89.70.181.34"
+}
+headers = {
+	"accept": "*/*",
+	"accept-encoding": "gzip, deflate, br",
+	"accept-language": "pl-PL,pl;q=0.9,en;q=0.8",
+	"content-length": "191",
+	"content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+	"cookie": "timezone=Europe/Berlin; session_locale=pl; cpsession=antyzer1%3aQ9OmxWHZOldslJ9d%2c3ed89731a598f0772118a8ffeef2e997",
+	"origin": "https://cpanel.antyzero.com",
+	"referer": "https://cpanel.antyzero.com/",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-origin",
+	"x-requested-with": "XMLHttpRequest"
+}
+print(session.post("https://cpanel.antyzero.com/cpsess8264491184/json-api/cpanel", changeIpData, headers=headers))
